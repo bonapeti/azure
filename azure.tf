@@ -12,14 +12,31 @@ resource "azurerm_virtual_network" "terraform_eval_network" {
   location            = "${azurerm_resource_group.terraform_eval.location}"
   resource_group_name = "${azurerm_resource_group.terraform_eval.name}"
 
-  subnet {
-    name           = "backend"
-    address_prefix = "10.0.1.0/24"
-  }
+}
 
-  subnet {
-    name           = "frontend"
-    address_prefix = "10.0.2.0/24"
-  }
+resource "azurerm_subnet" "frontend" {
+	name                 = "frontend"
+  	resource_group_name  = "${azurerm_resource_group.terraform_eval.name}"
+  	virtual_network_name = "${azurerm_virtual_network.terraform_eval_network.name}"
+  	address_prefix       = "10.0.2.0/24"
+}
 
+resource "azurerm_subnet" "backend" {
+        name                 = "backend"
+        resource_group_name  = "${azurerm_resource_group.terraform_eval.name}"
+        virtual_network_name = "${azurerm_virtual_network.terraform_eval_network.name}"
+        address_prefix       = "10.0.1.0/24"
+}
+
+
+resource "azurerm_network_interface" "terraform_eval_frontend_if" {
+  name                = "frontend_if"
+  location            = "${azurerm_resource_group.terraform_eval.location}"
+  resource_group_name = "${azurerm_resource_group.terraform_eval.name}"
+
+  ip_configuration {
+    name                          = "frontend_configuration"
+    subnet_id                     = "${azurerm_subnet.frontend.id}"
+    private_ip_address_allocation = "dynamic"
+  }
 }
