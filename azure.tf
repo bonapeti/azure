@@ -40,3 +40,16 @@ resource "azurerm_network_interface" "terraform_eval_frontend_if" {
     private_ip_address_allocation = "dynamic"
   }
 }
+
+resource "azurerm_network_interface" "terraform_eval_backend_if" {
+  name                = "backend_if"
+  location            = "${azurerm_resource_group.terraform_eval.location}"
+  resource_group_name = "${azurerm_resource_group.terraform_eval.name}"
+
+  ip_configuration {
+    name                          = "backend_configuration"
+    subnet_id                     = "${azurerm_subnet.backend.id}"
+    private_ip_address_allocation = "dynamic"
+  }
+}
+
