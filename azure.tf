@@ -13,12 +13,12 @@ resource "azurerm_virtual_network" "network" {
   resource_group_name = "${azurerm_resource_group.network.name}"
 
   subnet {
-    name           = "subnet1"
+    name           = "backend"
     address_prefix = "10.0.1.0/24"
   }
 
   subnet {
-    name           = "subnet2"
+    name           = "frontend"
     address_prefix = "10.0.2.0/24"
   }
 
